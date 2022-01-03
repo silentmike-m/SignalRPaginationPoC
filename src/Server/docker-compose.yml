@@ -1,0 +1,39 @@
+version: "3.9"
+networks:
+  localdev:
+    external: true
+volumes:
+  azuresqldata:
+    external: true    
+services:
+  api:
+    build: .
+    depends_on:
+      - sqlserver
+    environment:
+      CONFIG_CONNECTIONSTRINGS__HANGFIRECONNECTION: "Server=sqlserver;Database=SignalR_Hangfire;User Id=sa;Password=${DEFAULT_PASSWORD:-P@ssw0rd};MultipleActiveResultSets=true;"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "5000:5000"
+    networks:
+      - localdev
+    restart: unless-stopped
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${DEFAULT_PASSWORD:-P@ssw0rd}"
+      MSSQL_PID: "Developer"
+    networks:
+      - localdev
+    ports:
+      - ${SQLSERVER_TCP_PORT:-1433}:1433
+    volumes:
+      - azuresqldata:/var/opt/mssql:rw
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

@@ -17,4 +17,14 @@ public sealed class CustomersController : ApiControllerBase
 
         return new BaseResponse<Customers>(response);
     }
+
+    [HttpPost(Name = "GetCustomersParts")]
+    public async Task<BaseResponse<ActionResult>> GetCustomersParts()
+    {
+        var request = new GetPagedCustomers();
+
+        _ = await this.Mediator.Send(request);
+
+        return new BaseResponse<ActionResult>(Ok());
+    }
 }
