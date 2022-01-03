@@ -18,8 +18,8 @@ public sealed class CustomersController : ApiControllerBase
         return new BaseResponse<Customers>(response);
     }
 
-    [HttpPost(Name = "GetCustomersParts")]
-    public async Task<BaseResponse<ActionResult>> GetCustomersParts()
+    [HttpPost(Name = "GetPagedCustomers")]
+    public async Task<BaseResponse<ActionResult>> GetPagedCustomers()
     {
         var request = new GetPagedCustomers();
 

@@ -31,10 +31,4 @@
     <ProjectReference Include="..\SignalRPoc.Server.Application\SignalRPoc.Server.Application.csproj" />
     <ProjectReference Include="..\SignalRPoc.Server.Domain\SignalRPoc.Server.Domain.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Customers\Profiles\" />
-    <Folder Include="JsonStorage\Constants\" />
-  </ItemGroup>
-
 </Project>

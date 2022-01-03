@@ -28,7 +28,6 @@ internal sealed class GotCustomersPageHandler : INotificationHandler<GotCustomer
             Response = notification.CustomersPage,
         };
 
-
         await this.hubContext.Clients.All
             .SendAsync("GotCustomersPage", response, cancellationToken)
             .ConfigureAwait(false);
