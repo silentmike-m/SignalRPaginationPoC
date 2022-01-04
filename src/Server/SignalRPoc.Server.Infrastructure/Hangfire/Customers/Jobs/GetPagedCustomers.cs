@@ -23,7 +23,7 @@ internal sealed class GetPagedCustomers
         this.service = service;
     }
 
-    [DisplayName("Get customers by parts")]
+    [DisplayName("Get customers by pages")]
     [AutomaticRetry(Attempts = 0)]
     public async Task Run()
     {
@@ -31,18 +31,17 @@ internal sealed class GetPagedCustomers
 
         var customers = await this.service.GetCustomers();
 
-        for (var i = 0; i < customers.CustomersList.Count; i += PAGE_SIZE)
-        {
-            var part = customers.CustomersList
-                .Skip(i)
-                .Take(PAGE_SIZE)
-                .ToList();
+        var totalCount = customers.CustomersList.Count;
 
+        var pages = customers.CustomersList.Chunk(PAGE_SIZE);
+
+        foreach (var page in pages)
+        {
             var customersPage = new CustomersPage
             {
-                Customers = part,
+                Customers = page,
                 PageSize = PAGE_SIZE,
-                TotalCount = customers.CustomersList.Count,
+                TotalCount = totalCount,
             };
 
             var notification = new GotCustomersPage
